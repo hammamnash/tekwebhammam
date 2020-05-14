@@ -1,0 +1,28 @@
+// LOAD daop1_fix
+LOAD CSV WITH HEADERS FROM "file:///daop1_fix.csv" AS csvLine
+
+MERGE (kereta:Kereta {name: csvLine.kereta})
+MERGE (stasiun_awal:Stasiun {name: csvLine.stasiun_awal})
+MERGE (stasiun_akhir:Stasiun {name: csvLine.stasiun_akhir})
+MERGE (kota_kab_awal:Kota {name: csvLine.kota_kab_awal})
+MERGE (kota_kab_akhir:Kota {name: csvLine.kota_kab_akhir})
+
+CREATE 
+(kota_kab_awal) 
+-[:TERHUBUNG_KE{DARI: csvLine.stasiun_awal, MENUJU: csvLine.stasiun_akhir, MENGGUNAKAN: csvLine.kereta}]
+->(kota_kab_akhir)
+
+
+//Closeness Centrality
+CALL algo.closeness.stream('Kota', 'TERHUBUNG_KE')
+YIELD nodeId, centrality
+
+RETURN algo.asNode(nodeId).name AS Kota_Kabupaten, centrality
+ORDER BY centrality DESC;
+
+
+//Graph Density
+MATCH (p:Kota)-[r:TERHUBUNG_KE]-(f:Kota) 
+RETURN count(DISTINCT p) as Jumlah_Nodes, 
+ count(DISTINCT r) as Jumlah_Edges,
+ count(DISTINCT r)/((count(DISTINCT p)-1) * (count(DISTINCT p) - 1.0)) AS graphDensity

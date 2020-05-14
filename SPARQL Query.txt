@@ -1,0 +1,30 @@
+SELECT DISTINCT ?kereta ?stasiun_awal ?kota_kab_awal ?stasiun_akhir ?kota_kab_akhir WHERE
+{
+  { 
+  ?k dcterms:subject <http://id.dbpedia.org/resource/Kategori:Kereta_api_di_Indonesia>.
+  ?k rdfs:label ?kereta.
+  ?k dbpprop-id:start ?start.
+  ?start dcterms:subject <http://id.dbpedia.org/resource/Kategori:Stasiun_kereta_api_di_Jakarta>.
+  ?start rdfs:label ?stasiun_awal.
+  ?k dbpprop-id:end ?end.
+  ?end rdfs:label ?stasiun_akhir.
+  OPTIONAL {?start dbpprop-id:kota ?kota_kab_awal}.
+  OPTIONAL {?start dbpprop-id:kabupaten ?kota_kab_awal}.
+  OPTIONAL {?end dbpprop-id:kota ?kota_kab_akhir}.
+  OPTIONAL {?end dbpprop-id:kabupaten ?kota_kab_akhir}.
+  }
+UNION
+  { 
+  ?k dcterms:subject <http://id.dbpedia.org/resource/Kategori:Kereta_api_di_Indonesia>.
+  ?k rdfs:label ?kereta.
+  ?k dbpprop-id:start ?start.
+  ?start rdfs:label ?stasiun_awal.
+  ?k dbpprop-id:end ?end.
+  ?end dcterms:subject <http://id.dbpedia.org/resource/Kategori:Stasiun_kereta_api_di_Jakarta>.
+  ?end rdfs:label ?stasiun_akhir.
+  OPTIONAL {?start dbpprop-id:kota ?kota_kab_awal}.
+  OPTIONAL {?start dbpprop-id:kabupaten ?kota_kab_awal}.
+  OPTIONAL {?end dbpprop-id:kota ?kota_kab_akhir}.
+  OPTIONAL {?end dbpprop-id:kabupaten ?kota_kab_akhir}.
+  }
+}
